@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static de.jjasper.cbsdk.Helpers.*;
 
@@ -33,6 +34,8 @@ class CbsdkApplicationTests {
         log.info("Updating Person {}", updatedPerson);
         personService.update(updatedPerson);
         log.info("Reading updated Person {}", personService.read(personId));
+
+        log.info("Reading list of Persons {}", personService.getByName(person.getName()));
 
         personService.delete(personId);
     }
