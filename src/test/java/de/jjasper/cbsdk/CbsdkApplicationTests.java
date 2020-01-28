@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
+
 import static de.jjasper.cbsdk.Helpers.*;
 
 @SpringBootTest
@@ -13,21 +15,25 @@ import static de.jjasper.cbsdk.Helpers.*;
 class CbsdkApplicationTests {
 
     @Autowired
-    private PersonCrudService personCrudService;
+    private PersonService personService;
 
     @Test
-    void contextLoads() {
+    void crud() {
         var personId = uuid();
-        var person = new Person(personId, "type", "name", "Berlin");
+        var person = new Person(personId,
+            LocalDate.of(1991, 1, 1),
+            "Peter Pan",
+            "Berlin");
+
         log.info("Inserting Person {}", person);
-        personCrudService.create(person);
-        log.info("Reading Person {}", personCrudService.read(personId));
+        personService.create(person);
+        log.info("Reading Person {}", personService.read(personId));
 
         var updatedPerson = person.withHomeTown("Hamburg");
         log.info("Updating Person {}", updatedPerson);
-        personCrudService.update(updatedPerson);
-        log.info("Reading Person {}", personCrudService.read(personId));
+        personService.update(updatedPerson);
+        log.info("Reading updated Person {}", personService.read(personId));
 
-        personCrudService.delete(personId);
+        personService.delete(personId);
     }
 }

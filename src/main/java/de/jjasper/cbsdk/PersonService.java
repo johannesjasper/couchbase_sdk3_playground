@@ -1,6 +1,8 @@
 package de.jjasper.cbsdk;
 
 import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.kv.InsertOptions;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.jjasper.cbsdk.data.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +15,13 @@ import static de.jjasper.cbsdk.dao.BucketService.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PersonCrudService {
+public class PersonService {
 
-    @Autowired
-    @Qualifier(PERSON_BUCKET)
-    private Bucket bucket;
+    @Qualifier(TEST_BUCKET)
+    private final Bucket bucket;
+    private final ObjectMapper objectMapper;
+
+
 
     public void create(Person person) {
         bucket.defaultCollection().insert(person.getId(), person);
