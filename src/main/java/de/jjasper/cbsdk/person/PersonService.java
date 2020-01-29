@@ -1,5 +1,6 @@
 package de.jjasper.cbsdk.person;
 
+import static com.couchbase.client.java.kv.GetOptions.getOptions;
 import static com.couchbase.client.java.manager.query.CreateQueryIndexOptions.createQueryIndexOptions;
 import static com.couchbase.client.java.query.QueryOptions.queryOptions;
 import static com.couchbase.client.java.query.QueryScanConsistency.NOT_BOUNDED;
@@ -33,7 +34,6 @@ public class PersonService {
             createQueryIndexOptions().ignoreIfExists(true));
     }
 
-
     public void create(Person person) {
         bucket.defaultCollection().insert(person.getId(), person);
     }
@@ -56,6 +56,12 @@ public class PersonService {
                                  .parameters(JsonObject.create().put("name", name))
                                  .scanConsistency(NOT_BOUNDED))
                       .rowsAs(PersonNameProjection.class);
+    }
+
+    public PersonNameProjection getProjecion(String id) {
+        return bucket.defaultCollection()
+                     .get(id, getOptions().project("name"))
+                     .contentAs(PersonNameProjection.class);
     }
 
     public Person readFromReplica(String id) {

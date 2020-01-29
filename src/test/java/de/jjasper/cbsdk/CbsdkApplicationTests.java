@@ -21,22 +21,22 @@ class CbsdkApplicationTests {
     void crud() {
         var personId = uuid();
         var person = new Person(personId,
-            LocalDate.of(1991, 1, 1),
-            "Peter Pan",
-            "Berlin");
+                                LocalDate.of(1991, 1, 1),
+                                "Peter Pan",
+                                "Berlin");
 
         log.info("Inserting Person {}", person);
         personService.create(person);
         log.info("Reading Person {}", personService.read(personId));
+        log.info("Reading Person name {}", personService.getProjecion(personId));
+
+        log.info("Reading list of Persons {}", personService.getByName(person.getName()));
+        log.info("Reading list of Person names {}", personService.getProjecionByName(person.getName()));
 
         var updatedPerson = person.withHomeTown("Hamburg");
         log.info("Updating Person {}", updatedPerson);
         personService.update(updatedPerson);
         log.info("Reading updated Person {}", personService.read(personId));
-
-        log.info("Reading list of Persons {}", personService.getByName(person.getName()));
-
-        log.info("Reading list of Person names {}", personService.getProjecionByName(person.getName()));
 
         personService.delete(personId);
     }
