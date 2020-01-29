@@ -1,18 +1,13 @@
-package de.jjasper.cbsdk.data;
+package de.jjasper.cbsdk.person.data;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.AccessLevel;
+import static lombok.AccessLevel.PRIVATE;
+
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
-
-import java.time.LocalDate;
-
-import static lombok.AccessLevel.*;
 
 @Value
 @With

@@ -1,21 +1,21 @@
-package de.jjasper.cbsdk;
+package de.jjasper.cbsdk.person;
+
+import static com.couchbase.client.java.manager.query.CreateQueryIndexOptions.createQueryIndexOptions;
+import static com.couchbase.client.java.query.QueryOptions.queryOptions;
+import static com.couchbase.client.java.query.QueryScanConsistency.NOT_BOUNDED;
+import static de.jjasper.cbsdk.dao.BucketService.TEST_BUCKET;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.json.JsonObject;
-import de.jjasper.cbsdk.data.Person;
+import de.jjasper.cbsdk.person.data.Person;
+import de.jjasper.cbsdk.person.data.PersonNameProjection;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-
-import static com.couchbase.client.java.manager.query.CreateQueryIndexOptions.*;
-import static com.couchbase.client.java.query.QueryOptions.*;
-import static com.couchbase.client.java.query.QueryScanConsistency.*;
-import static de.jjasper.cbsdk.dao.BucketService.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,15 +43,20 @@ public class PersonService {
     }
 
     public List<Person> getByName(String name) {
-        return cluster.query(String.format("select %s.* from %s where `name`=$name", bucket.name(), bucket.name()),
-            queryOptions()
-                .parameters(JsonObject.create()
-                    .put("bucket", bucket.name())
-                    .put("name", name))
-                .scanConsistency(NOT_BOUNDED))
-            .rowsAs(Person.class);
+        return cluster.query(String.format("select b.* from %s b where `name`=$name", bucket.name()),
+                             queryOptions()
+                                 .parameters(JsonObject.create().put("name", name))
+                                 .scanConsistency(NOT_BOUNDED))
+                      .rowsAs(Person.class);
     }
 
+    public List<PersonNameProjection> getProjecionByName(String name) {
+        return cluster.query(String.format("select b.name from %s b where `name`=$name", bucket.name()),
+                             queryOptions()
+                                 .parameters(JsonObject.create().put("name", name))
+                                 .scanConsistency(NOT_BOUNDED))
+                      .rowsAs(PersonNameProjection.class);
+    }
 
     public Person readFromReplica(String id) {
         return bucket.defaultCollection().getAnyReplica(id).contentAs(Person.class);

@@ -1,15 +1,14 @@
 package de.jjasper.cbsdk;
 
-import de.jjasper.cbsdk.data.Person;
+import static de.jjasper.cbsdk.Helpers.uuid;
+
+import de.jjasper.cbsdk.person.PersonService;
+import de.jjasper.cbsdk.person.data.Person;
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static de.jjasper.cbsdk.Helpers.*;
 
 @SpringBootTest
 @Slf4j
@@ -36,6 +35,8 @@ class CbsdkApplicationTests {
         log.info("Reading updated Person {}", personService.read(personId));
 
         log.info("Reading list of Persons {}", personService.getByName(person.getName()));
+
+        log.info("Reading list of Person names {}", personService.getProjecionByName(person.getName()));
 
         personService.delete(personId);
     }
